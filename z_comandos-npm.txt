@@ -7,3 +7,20 @@ https://www.nativewind.dev/quick-starts/expo
  *npm install nativewind
  *npm install --save-dev tailwindcss@3.3.2
  *npx tailwindcss init
+
+// github
+   1 git init
+   2 git status
+   4 git add ....
+   5 git commit -m " "
+   6 git push origin main...
+
+// dependencies Responsive
+https://www.npmjs.com/package/react-native-responsive-screen
+
+>npm i react-native-responsive-screen
+
+// dependencies Iconos
+https://www.npmjs.com/package/@expo/vector-icons
+
+>npm i @expo/vector-icons

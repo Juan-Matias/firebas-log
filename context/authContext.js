@@ -9,16 +9,10 @@ export const AuthContextProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(undefined);
 
     useEffect(() => {
-        // Aquí deberías agregar la lógica para manejar el estado de autenticación, por ejemplo:
-        // onAuthStateChanged(auth, (user) => {
-        //     if (user) {
-        //         setUser(user);
-        //         setIsAuthenticated(true);
-        //     } else {
-        //         setUser(null);
-        //         setIsAuthenticated(false);
-        //     }
-        // });
+            //onAuthStateChanged
+            //setTimeout(()=>{
+                setIsAuthenticated(false);
+            //},3000)
     }, []);
 
     const login = async (email, password) => {
