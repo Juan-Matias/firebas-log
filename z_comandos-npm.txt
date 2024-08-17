@@ -11,7 +11,7 @@ https://www.nativewind.dev/quick-starts/expo
 // github
    1 git init
    2 git status
-   4 git add ....
+   4 git add .
    5 git commit -m " "
    6 git push origin main...
 
