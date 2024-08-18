@@ -18,9 +18,13 @@ https://www.nativewind.dev/quick-starts/expo
 // dependencies Responsive
 https://www.npmjs.com/package/react-native-responsive-screen
 
->npm i react-native-responsive-screen
+> npm i react-native-responsive-screen
 
 // dependencies Iconos
 https://www.npmjs.com/package/@expo/vector-icons
 
->npm i @expo/vector-icons
+> npm i @expo/vector-icons
+
+// dependencies de animaciones
+https://www.npmjs.com/package/lottie-react-native
+> npm i lottie-react-native
