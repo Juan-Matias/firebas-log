@@ -15,16 +15,25 @@ https://www.nativewind.dev/quick-starts/expo
    5 git commit -m " "
    6 git push origin main...
 
-// dependencies Responsive
+// biblioteca de Responsive
 https://www.npmjs.com/package/react-native-responsive-screen
 
 > npm i react-native-responsive-screen
 
-// dependencies Iconos
+// biblioteca de Iconos
 https://www.npmjs.com/package/@expo/vector-icons
 
 > npm i @expo/vector-icons
 
-// dependencies de animaciones
+// biblioteca de animaciones
 https://www.npmjs.com/package/lottie-react-native
 > npm i lottie-react-native
+
+
+// firebase - Base de datos no sql
+https://console.firebase.google.com/u/0/project/app-carrete-cervecero/overview?hl=es-419
+> npm install firebase
+
+// biblioteca async storage -- sirve para almacenamiento local en aplicaciones React Native
+
+> npm i @react-native-async-storage/async-storage

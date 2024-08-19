@@ -1,35 +1,70 @@
-import { View, Text, Image, TextInput, TouchableOpacity, Pressable, Alert } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen'; 
-import { StatusBar } from 'expo-status-bar'
+import { View, Text, Image, TextInput, TouchableOpacity, Pressable } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { StatusBar } from 'expo-status-bar';
 import { Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Loading from '../components/loading';
+import CustomKeyboardView from '../components/CustomKeyboardView';
+import { useAuth } from '../context/authContext';
 
 export default function SignIn() {
   const router = useRouter();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
-  
+  const [errors, setErrors] = useState({});
+
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
   const handleLogin = async () => {
-    if (!emailRef.current || !passwordRef.current) {
-      Alert.alert("Sign In", "Please fill all the fields");
+    let validationErrors = {};
+
+    if (!emailRef.current) validationErrors.email = "Please enter your email";
+    else if (!validateEmail(emailRef.current)) validationErrors.email = "Please enter a valid email address";
+
+    if (!passwordRef.current) validationErrors.password = "Please enter your password";
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-    // login process
-  }
+
+    setLoading(true);
+
+    try {
+      const response = await login(emailRef.current, passwordRef.current);
+
+      if (response.success) {
+        router.push('/home');
+      } else {
+        switch(response.message) {
+          case 'auth/wrong-password':
+            setErrors({ password: "Incorrect password. Please try again." });
+            break;
+          case 'auth/user-not-found':
+            setErrors({ email: "No user found with this email." });
+            break;
+          default:
+            setErrors({ general: response.message || "An error occurred during login." });
+            break;
+        }
+      }
+    } catch (error) {
+      setErrors({ general: `Error: ${error.message}` });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <View className="flex-1">
+    <CustomKeyboardView>
       <StatusBar style="dark" />
-      
-      <View 
-        style={{ paddingTop: hp(7), paddingHorizontal: wp(4) }}
-        className="flex-1">
-          
-        {/* signIn image */}
+      <View style={{ paddingTop: hp(7), paddingHorizontal: wp(4) }} className="flex-1">
+        
+        {/* SignIn image */}
         <View className="items-center">
           <Image 
             style={{ height: hp(30) }}
@@ -50,11 +85,14 @@ export default function SignIn() {
               className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
               <Octicons name="mail" size={hp(2.7)} />
               <TextInput
-                onChangeText={value => emailRef.current = value}
+                onChangeText={value => {
+                  emailRef.current = value;
+                  if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
+                }}
                 style={{ fontSize: hp(2) }}
                 className="flex-1 font-semibold text-neutral-700"
-                placeholder="Email address"
-                placeholderTextColor="gray"
+                placeholder={errors.email ? errors.email : "Email address"}
+                placeholderTextColor={errors.email ? "#FF5733" : "gray"}
               />
             </View>
 
@@ -64,12 +102,15 @@ export default function SignIn() {
                 className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
                 <Octicons name="lock" size={hp(2.7)} />
                 <TextInput
-                  onChangeText={value => passwordRef.current = value}
+                  onChangeText={value => {
+                    passwordRef.current = value;
+                    if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
+                  }}
                   style={{ fontSize: hp(2) }}
                   className="flex-1 font-semibold text-neutral-700"
-                  placeholder="Password"
+                  placeholder={errors.password ? errors.password : "Password"}
                   secureTextEntry
-                  placeholderTextColor="gray"
+                  placeholderTextColor={errors.password ? "#FF5733" : "gray"}
                 />
               </View>
               <Text style={{ fontSize: hp(1.8) }} className="font-semibold text-right text-neutral-500">
@@ -77,8 +118,8 @@ export default function SignIn() {
               </Text>
             </View>
 
-            {/* submit button */}
-            <View >
+            {/* Submit button */}
+            <View>
               {loading ? (
                 <View className="flex-row justify-center">
                   <Loading size={hp(8)}/>
@@ -95,7 +136,12 @@ export default function SignIn() {
               )}
             </View>
 
-            {/* sign up text */}
+            {/* General Error */}
+            {errors.general && (
+              <Text style={{ fontSize: hp(1.8), color: 'red', textAlign: 'center' }}>{errors.general}</Text>
+            )}
+
+            {/* Sign up text */}
             <View className="flex-row justify-center">
               <Text style={{ fontSize: hp(1.8) }} className="font-semibold text-neutral-500">
                 Don't have an account?
@@ -109,6 +155,6 @@ export default function SignIn() {
           </View>
         </View>
       </View>
-    </View>
-  )
+    </CustomKeyboardView>
+  );
 }
