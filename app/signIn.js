@@ -7,12 +7,14 @@ import { useRouter } from 'expo-router';
 import Loading from '../components/loading';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import { useAuth } from '../context/authContext';
+import Alert from '../components/alert.js';
 
 export default function SignIn() {
   const router = useRouter();
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [alertMessage, setAlertMessage] = useState('');
 
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -29,6 +31,7 @@ export default function SignIn() {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setAlertMessage(Object.values(validationErrors).join('\n'));
       return;
     }
 
@@ -40,19 +43,25 @@ export default function SignIn() {
       if (response.success) {
         router.push('/home');
       } else {
+        let errorMessage = '';
         switch(response.message) {
           case 'auth/wrong-password':
-            setErrors({ password: "Incorrect password. Please try again." });
+            errorMessage = "Incorrect password. Please try again.";
+            setErrors({ password: errorMessage });
             break;
           case 'auth/user-not-found':
-            setErrors({ email: "No user found with this email." });
+            errorMessage = "No user found with this email.";
+            setErrors({ email: errorMessage });
             break;
           default:
-            setErrors({ general: response.message || "An error occurred during login." });
+            errorMessage = response.message || "An error occurred during login.";
+            setErrors({ general: errorMessage });
             break;
         }
+        setAlertMessage(errorMessage);
       }
     } catch (error) {
+      setAlertMessage(`Error: ${error.message}`);
       setErrors({ general: `Error: ${error.message}` });
     } finally {
       setLoading(false);
@@ -60,8 +69,17 @@ export default function SignIn() {
   };
 
   return (
-    <CustomKeyboardView>
+    <View className="flex-1">
       <StatusBar style="dark" />
+
+      {/* Alert component */}
+      {alertMessage ? (
+        <Alert 
+          message={alertMessage} 
+          onDismiss={() => setAlertMessage('')} 
+        />
+      ) : null}
+
       <View style={{ paddingTop: hp(7), paddingHorizontal: wp(4) }} className="flex-1">
         
         {/* SignIn image */}
@@ -91,8 +109,8 @@ export default function SignIn() {
                 }}
                 style={{ fontSize: hp(2) }}
                 className="flex-1 font-semibold text-neutral-700"
-                placeholder={errors.email ? errors.email : "Email address"}
-                placeholderTextColor={errors.email ? "#FF5733" : "gray"}
+                placeholder="Email address"
+                placeholderTextColor="gray"
               />
             </View>
 
@@ -108,9 +126,9 @@ export default function SignIn() {
                   }}
                   style={{ fontSize: hp(2) }}
                   className="flex-1 font-semibold text-neutral-700"
-                  placeholder={errors.password ? errors.password : "Password"}
+                  placeholder="Password"
                   secureTextEntry
-                  placeholderTextColor={errors.password ? "#FF5733" : "gray"}
+                  placeholderTextColor="gray"
                 />
               </View>
               <Text style={{ fontSize: hp(1.8) }} className="font-semibold text-right text-neutral-500">
@@ -155,6 +173,6 @@ export default function SignIn() {
           </View>
         </View>
       </View>
-    </CustomKeyboardView>
+    </View>
   );
 }
