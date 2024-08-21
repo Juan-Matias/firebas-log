@@ -19,7 +19,7 @@ const MainLayout = () => {
       router.replace('home');
     } else if (isAuthenticated === false) {
       // Redirigir a la página de inicio de sesión
-      router.replace('signIn');
+      router.replace('homeScreen');
     }
   }, [isAuthenticated]);
 

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; // Importa el ícono que deseas usar
 
 export default function Alert({ message, onDismiss }) {
   const opacity = new Animated.Value(1);
@@ -11,21 +12,22 @@ export default function Alert({ message, onDismiss }) {
         duration: 500,
         useNativeDriver: true,
       }).start(() => onDismiss());
-    }, 3000); // Duración antes de ocultar la alerta
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-<Animated.View 
-  style={{ opacity, bottom: 100 }} 
-  className="absolute left-0 right-0 items-center z-50"
->
-  <View className="bg-red-500 px-10 py-2 rounded-xl">
-    <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-      {message}
-    </Text>
-  </View>
-</Animated.View>
+    <Animated.View 
+      style={{ opacity, bottom: 100 }} 
+      className="absolute left-0 right-0 items-center z-50"
+    >
+      <View className="bg-red-500  px-10 py-2 rounded-xl flex-row items-center">
+        <Ionicons name="beer-outline" size={20} color="white" style={{ marginRight: 8 }} />
+        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+          {message}
+        </Text>
+      </View>
+    </Animated.View>
   );
 }

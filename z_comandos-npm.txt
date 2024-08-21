@@ -8,12 +8,14 @@ https://www.nativewind.dev/quick-starts/expo
  *npm install --save-dev tailwindcss@3.3.2
  *npx tailwindcss init
 
+- emulator -avd Pixel_8_API_35
+
 // github
    1 git init
    2 git status
    4 git add .
    5 git commit -m " "
-   6 git push origin main...
+   6 git push origin main
 
 // biblioteca de Responsive
 https://www.npmjs.com/package/react-native-responsive-screen
