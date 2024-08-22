@@ -98,21 +98,21 @@ export default function SignIn() {
         {/* Imagen de SignIn */}
         <View className="items-center">
           <Image 
-            style={{ height: hp(30) }}
+            style={{ height: hp(25) }}
             resizeMode="contain"
-            source={require('../assets/Imagenes-new/login.png')} 
+            source={require('../assets/Imagenes-new/Login1.png')} 
           />
         </View>
 
-        <View className="gap-y-2"> 
-          <Text style={{ fontSize: hp(4) }} className="font-bold tracking-wider text-center text-neutral-800">
+        <View className="gap-y-5"> 
+          <Text style={{ fontSize: hp(4), paddingTop: hp(2) }} className="font-bold tracking-wider text-center text-neutral-800">
             Iniciar sesión
           </Text>
 
           {/* Inputs */}
-          <View className="gap-y-4">
+          <View  style= {{paddingTop: hp(1)}} className="gap-y-4">
             <View 
-              style={{ height: hp(7) }} 
+              style={{ height: hp(7)}} 
               className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
               <Octicons name="mail" size={hp(2.7)} />
               <TextInput
@@ -152,16 +152,26 @@ export default function SignIn() {
             </View>
 
             {/* Botón de envío */}
-              <TouchableOpacity 
-                onPress={handleLogin} 
-                style={{ height: hp(6.5), backgroundColor: '#E8A500' }} // Aquí cambiamos el color de fondo
-                className="rounded-xl justify-center items-center"
-              >
-                <Text style={{ fontSize: hp(2.7) }} className="text-white font-bold tracking-wider">
-                  Iniciar sesión
-                </Text>
-              </TouchableOpacity>
 
+            <View>
+            {loading ? (
+              <View className="flex-row justify-center">
+                <Loading size={hp(8)} />
+              </View>
+            ) : (
+              <View style={{ paddingTop: hp(10) }}>
+                <TouchableOpacity 
+                  onPress={handleLogin} 
+                  style={{ height: hp(6.5), backgroundColor: '#E8A500' }} // Aquí cambiamos el color de fondo
+                  className="rounded-xl justify-center items-center"
+                >
+                  <Text style={{ fontSize: hp(2.7) }} className="text-white font-bold tracking-wider">
+                    Iniciar sesión
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
 
             {/* Error general */}
             {errors.general && (

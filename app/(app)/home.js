@@ -1,6 +1,7 @@
 import { View, Text, Button, Pressable } from 'react-native';
 import React from 'react';
 import { useAuth } from '../../context/authContext';
+import ColorList from '../../components/ColorList';
 
 export default function Home() {
   const { logout } = useAuth();
@@ -12,11 +13,11 @@ export default function Home() {
       console.error('Error during logout:', error);
     }
   };
-
+// <Button title="Sign Out" onPress={handleLogout} /> 
   return (
     <View>
-      <Text>Home</Text>
-      <Button title="Sign Out" onPress={handleLogout} /> 
+      <ColorList color="#0891b2"/>
+     
 
     </View>
   );
