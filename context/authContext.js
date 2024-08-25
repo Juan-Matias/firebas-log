@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
 
     useEffect(() => {
         // onAuthStateChanged -- Estado de autenticación

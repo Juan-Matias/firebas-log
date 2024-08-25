@@ -1,13 +1,17 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import TarBarButton from './TarBarButton';
 
-
-//https://www.youtube.com/watch?v=K6OJP0s5VDQ&t=900s
-// minute 10:22
 
 export default function TabBar({ state, descriptors, navigation }) {
+
+
+
+  const primatyColor = '#0891b2';
+  const greyColor = '#737373';
+
   return (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={styles.tabbar}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -38,23 +42,69 @@ export default function TabBar({ state, descriptors, navigation }) {
           });
         };
 
-        return (
+      
+        return(
+          <TarBarButton
+          key={route.key}
+          style={styles.tabbarItem}
+          
+          onPress={onPress}
+          onLongPress={onLongPress}
+
+          isFocused={isFocused}
+          routeName = {route.name}
+          color={isFocused? primatyColor: greyColor}
+          label={label}
+          />
+        )
+
+        /*return (
           <TouchableOpacity
+
+      
             key={route.key}
+            style={styles.tabbarItem}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={{ flex: 1 }}
           >
-            <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
+          {
+            icons[route.name]({
+              color:isFocused? primatyColor:greyColor
+            })
+          }
+            <Text style={{
+              color: isFocused ? primatyColor: greyColor,
+              fontSize:12
+              }}>
               {label}
             </Text>
           </TouchableOpacity>
-        );
+        );*/ 
       })}
     </View>
   );
 }
+
+const styles = StyleSheet.create(
+  {
+    tabbar:{
+      position:'absolute',
+      bottom:25,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: 'white',
+      marginHorizontal:20,
+      paddingVertical:15,
+      borderRadius:25,
+      borderCurve:'continuos',
+      shadowColor:'black',
+      shadowOffset:{width:0,height:10},
+      shadowOpacity:0.1
+    }
+  }
+)

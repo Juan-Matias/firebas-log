@@ -13,10 +13,11 @@ export default function Home() {
       console.error('Error during logout:', error);
     }
   };
-// <Button title="Sign Out" onPress={handleLogout} /> 
+
   return (
     <View>
       <ColorList color="#0891b2"/>
+      <Button title="Sign Out" onPress={handleLogout} /> 
      
 
     </View>
