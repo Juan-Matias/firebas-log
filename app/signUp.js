@@ -1,97 +1,44 @@
-import { View, Text, TextInput, TouchableOpacity, Pressable } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Animated } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { StatusBar } from 'expo-status-bar';
-import { Feather } from '@expo/vector-icons';
+import { Feather, Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Loading from '../components/loading';
-// import CustomKeyboardView from '../components/CustomKeyboardView';
-import { useAuth } from '../context/authContext';
 import Alert from '../components/alert.js';
+import useSignUpLogic from '../hooks/login/useSignUpLogic'; // Importa el hook de lógica
+import CustomKeyboardView from '../components/CustomKeyboardView.js';
 
+// [ Registrarse ]
 export default function SignUp() {
+  const {
+    refs,
+    errors,
+    setErrors,
+    loading,
+    alertMessage,
+    setAlertMessage,
+    handleRegister,
+  } = useSignUpLogic(); // Usa el hook de lógica
+
   const router = useRouter();
-  const { register } = useAuth();
+  const opacity = new Animated.Value(1);
 
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [alertMessage, setAlertMessage] = useState('');
+  // [Estado para la visibilidad de las contraseñas]
+  const [passwordShown, setPasswordShown] = useState({
+    password: false,
+    confirmPassword: false,
+  });
 
-  // Referencias para los inputs
-  const refs = {
-    username: useRef(null),
-    email: useRef(null),
-    telefono: useRef(null),
-    password: useRef(null),
-    passConfirmacion: useRef(null),
+  // Función para alternar la visibilidad de las contraseñas
+  const togglePasswordVisibility = (field) => {
+    setPasswordShown((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  // Validaciones de los inputs
-  const validations = {
-    email: value => /\S+@\S+\.\S+/.test(value) ? "" : "Please enter a valid email address",
-    username: value => value ? "" : "Ingrese su nombre completo",
-    telefono: value => /^\d+$/.test(value) ? "" : "Please enter a valid phone number",
-    password: value => value ? "" : "Please enter your password",
-    passConfirmacion: value => value === refs.password.current?.value ? "" : "Passwords do not match",
-  };
-
-  // Manejo del registro
-  const handleRegister = async () => {
-    let validationErrors = {};
-    let firstErrorKey = null;
-
-    // Validar los campos y capturar el primer error
-    for (const key in refs) {
-      const value = refs[key].current?.value;
-      const errorMessage = validations[key](value);
-      if (errorMessage) {
-        validationErrors[key] = errorMessage;
-        if (!firstErrorKey) firstErrorKey = key; // Captura la primera clave con error
-      }
-    }
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setAlertMessage("Todos los campos son obligatorios");
-
-      // Enfocar el primer campo con error
-      if (firstErrorKey && refs[firstErrorKey].current) {
-        refs[firstErrorKey].current.focus();
-      }
-
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await register(refs.email.current.value, refs.password.current.value, 'defaultProfileUrl');
-
-      if (response.success) {
-        router.push('/signIn');
-      } else {
-        setAlertMessage(response.message || "An error occurred during registration.");
-        setErrors({ general: response.message || "An error occurred during registration." });
-      }
-    } catch (error) {
-      setAlertMessage(`Error: ${error.message}`);
-      setErrors({ general: `Error: ${error.message}` });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // [Sección diseño]
   return (
-    <View className="flex-1">
+    <CustomKeyboardView>
       <StatusBar style="dark" />
-
-      {/* Componente de alerta */}
-      {alertMessage ? (
-        <Alert 
-          message={alertMessage} 
-          onDismiss={() => setAlertMessage('')} 
-        />
-      ) : null}
 
       <View style={{ paddingTop: hp(15), paddingHorizontal: wp(5) }} className="flex-1">
         
@@ -120,7 +67,7 @@ export default function SignUp() {
                     name={
                       key === "username" ? "user" :
                       key === "telefono" ? "phone" :
-                      key.includes("password") ? "lock" : "mail"
+                      key.includes("password") ? "lock" : "lock"
                     } 
                     size={hp(2.7)} 
                   />
@@ -140,8 +87,19 @@ export default function SignUp() {
                       key === "password" ? "Contraseña" : "Confirmar Contraseña"
                     }
                     placeholderTextColor="gray"
-                    secureTextEntry={key.includes("password")}
+                    secureTextEntry={key.includes("password") && !passwordShown[key]}
                   />
+                  
+                  {/* Botón para mostrar/ocultar contraseñas */}
+                  {key.includes("password") && (
+                    <TouchableOpacity onPress={() => togglePasswordVisibility(key)}>
+                      <Octicons 
+                        name={passwordShown[key] ? "eye" : "eye-closed"} 
+                        size={hp(2.7)} 
+                        color="gray" 
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             ))}
@@ -154,16 +112,15 @@ export default function SignUp() {
                 </View>
               ) : (
                 <TouchableOpacity 
-                onPress={handleRegister} 
-                style={{ height: hp(6.5), backgroundColor: '#E8A500' }} // Aquí cambiamos el color de fondo
-                className="rounded-xl justify-center items-center"
-              >
-                <Text style={{ fontSize: hp(2.7) }} className="text-white font-bold tracking-wider">
-                  Registrarse
-                </Text>
-              </TouchableOpacity>
-              )} 
-              
+                  onPress={handleRegister} 
+                  style={{ height: hp(6.5), backgroundColor: '#E8A500' }} // Aquí cambiamos el color de fondo
+                  className="rounded-xl justify-center items-center"
+                >
+                  <Text style={{ fontSize: hp(2.7) }} className="text-white font-bold tracking-wider">
+                    Registrarse
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
 
             {/* Error general */}
@@ -183,11 +140,21 @@ export default function SignUp() {
                   Iniciar sesión
                 </Text>
               </Pressable>
+            </View>
 
+            {/* Componente de alerta */}
+            <View style={{ paddingTop: hp(3) }}>
+              {alertMessage ? (
+                <Alert
+                  style={{ opacity }} 
+                  message={alertMessage} 
+                  onDismiss={() => setAlertMessage('')}
+                />
+              ) : null}
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </CustomKeyboardView>
   );
 }

@@ -1,99 +1,48 @@
-import { View, Text, Image, TextInput, TouchableOpacity, Pressable } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, Pressable, Animated } from 'react-native';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AntDesign, Octicons } from '@expo/vector-icons'; // Asegúrate de que esta importación es correcta
 import { StatusBar } from 'expo-status-bar';
-import { Octicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import Loading from '../components/loading';
+import Alert from '../components/alert';
+import useSignInLogic from '../hooks/login/useSignInLogic';
+import { useRouter } from 'expo-router';
 import CustomKeyboardView from '../components/CustomKeyboardView';
-import { useAuth } from '../context/authContext';
-import Alert from '../components/alert.js';
 
-export default function SignIn() {
+// [Seccion iniciar sesión]
+const SignInUI = () => {
+  // [Subsección: Enrutamiento]
   const router = useRouter();
-  const { login } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [alertMessage, setAlertMessage] = useState('');
 
-  const emailRef = useRef("");
-  const passwordRef = useRef("");
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
+  // [Subsección: Lógica de inicio de sesión]
+  const { 
+    emailInputRef, 
+    passwordInputRef, 
+    emailRef, 
+    passwordRef, 
+    errors, 
+    setErrors, 
+    loading, 
+    alertMessage, 
+    handleLogin, 
+    setAlertMessage 
+  } = useSignInLogic();
 
-  // Funciones de validación
-  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  // [Subsección: Estado para la visibilidad de la contraseña]
+  const [passwordShown, setPasswordShown] = useState(false);
+  const togglePasswordVisibility = () => setPasswordShown(!passwordShown);
 
-  const handleLogin = async () => {
-    let validationErrors = {};
+  // [Subsección: Animación de opacidad]
+  const opacity = new Animated.Value(1);
 
-    if (!emailRef.current) {
-      validationErrors.email = "Por favor, ingresa su correo";
-      emailInputRef.current?.focus(); // Enfoca el campo de correo electrónico
-    } else if (!validateEmail(emailRef.current)) {
-      validationErrors.email = "Por favor, ingresa un correo válido";
-      emailInputRef.current?.focus(); // Enfoca el campo de correo electrónico
-    }
-
-    if (!passwordRef.current) {
-      validationErrors.password = "Por favor, ingresa tu contraseña";
-      if (!validationErrors.email) passwordInputRef.current?.focus(); // Enfoca el campo de contraseña si no hay error en el email
-    }
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setAlertMessage(Object.values(validationErrors).join('\n'));
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await login(emailRef.current, passwordRef.current);
-
-      if (response.success) {
-        router.push('/home');
-      } else {
-        let errorMessage = '';
-        switch(response.message) {
-          case 'auth/wrong-password':
-            errorMessage = "Contraseña incorrecta. Por favor, inténtalo de nuevo.";
-            setErrors({ password: errorMessage });
-            passwordInputRef.current?.focus(); // Enfoca el campo de contraseña
-            break;
-          case 'auth/user-not-found':
-            errorMessage = "No se encontró un usuario con este correo electrónico.";
-            setErrors({ email: errorMessage });
-            emailInputRef.current?.focus(); // Enfoca el campo de correo electrónico
-            break;
-          default:
-            errorMessage = response.message || "Ocurrió un error durante el inicio de sesión.";
-            setErrors({ general: errorMessage });
-            break;
-        }
-        setAlertMessage(errorMessage);
-      }
-    } catch (error) {
-      setAlertMessage(`Error: ${error.message}`);
-      setErrors({ general: `Error: ${error.message}` });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // [Seccion diseño]
   return (
-    <View className="flex-1">
+    <CustomKeyboardView>
+      {/* Barra de estado */}
       <StatusBar style="dark" />
 
-      {/* Componente de alerta */}
-      {alertMessage ? (
-        <Alert 
-          message={alertMessage} 
-          onDismiss={() => setAlertMessage('')} 
-        />
-      ) : null}
-
-      <View style={{ paddingTop: hp(7), paddingHorizontal: wp(4) }} className="flex-1">
+      {/* Contenedor principal */}
+      <View style={{ paddingTop: hp(7), paddingHorizontal: hp(4) }} className="flex-1">
         
         {/* Imagen de SignIn */}
         <View className="items-center">
@@ -104,22 +53,25 @@ export default function SignIn() {
           />
         </View>
 
+        {/* Sección de texto y campos de entrada */}
         <View className="gap-y-5"> 
           <Text style={{ fontSize: hp(4), paddingTop: hp(2) }} className="font-bold tracking-wider text-center text-neutral-800">
             Iniciar sesión
           </Text>
 
-          {/* Inputs */}
-          <View  style= {{paddingTop: hp(1)}} className="gap-y-4">
+          {/* Inputs de correo electrónico y contraseña */}
+          <View style={{ paddingTop: hp(1) }} className="gap-y-4">
+            
+            {/* Campo de correo electrónico */}
             <View 
-              style={{ height: hp(7)}} 
+              style={{ height: hp(7) }} 
               className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
               <Octicons name="mail" size={hp(2.7)} />
               <TextInput
                 ref={emailInputRef}
                 onChangeText={value => {
                   emailRef.current = value;
-                  if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
+                  if (errors?.email) setErrors(prev => ({ ...prev, email: "" }));
                 }}
                 style={{ fontSize: hp(2) }}
                 className="flex-1 font-semibold text-neutral-700"
@@ -128,6 +80,7 @@ export default function SignIn() {
               />
             </View>
 
+            {/* Campo de contraseña */}
             <View className="gap-y-1.5">
               <View 
                 style={{ height: hp(7) }} 
@@ -137,49 +90,71 @@ export default function SignIn() {
                   ref={passwordInputRef}
                   onChangeText={value => {
                     passwordRef.current = value;
-                    if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
+                    if (errors?.password) setErrors(prev => ({ ...prev, password: "" }));
                   }}
                   style={{ fontSize: hp(2) }}
                   className="flex-1 font-semibold text-neutral-700"
                   placeholder="Contraseña"
-                  secureTextEntry
+                  secureTextEntry={!passwordShown}
                   placeholderTextColor="gray"
                 />
+                {/* Botón para mostrar/ocultar contraseña */}
+                <TouchableOpacity onPress={togglePasswordVisibility}>
+                  <Octicons 
+                    name={passwordShown ? "eye" : "eye-closed"} 
+                    size={hp(2.7)} 
+                    color="gray" 
+                  />
+                </TouchableOpacity>
               </View>
               <Text style={{ fontSize: hp(1.8) }} className="font-semibold text-right text-neutral-500">
                 ¿Olvidaste tu contraseña?
               </Text>
             </View>
 
-            {/* Botón de envío */}
-
+            {/* Botón de inicio de sesion */}
             <View>
-            {loading ? (
-              <View className="flex-row justify-center">
-                <Loading size={hp(8)} />
-              </View>
-            ) : (
-              <View style={{ paddingTop: hp(10) }}>
-                <TouchableOpacity 
-                  onPress={handleLogin} 
-                  style={{ height: hp(6.5), backgroundColor: '#E8A500' }} // Aquí cambiamos el color de fondo
-                  className="rounded-xl justify-center items-center"
-                >
-                  <Text style={{ fontSize: hp(2.7) }} className="text-white font-bold tracking-wider">
-                    Iniciar sesión
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
+              {loading ? (
+                <View className="flex-row justify-center">
+                  <Loading size={hp(8)} />
+                </View>
+              ) : (
+                <View style={{ paddingTop: hp(2) }}>
+                  <TouchableOpacity 
+                    onPress={handleLogin} 
+                    style={{ height: hp(6.5), backgroundColor: '#E8A500' }} 
+                    className="rounded-xl justify-center items-center"
+                  >
+                    <Text style={{ fontSize: hp(2.7) }} className="text-white font-bold tracking-wider">
+                      Iniciar sesión
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
 
-            {/* Error general */}
-            {errors.general && (
-              <Text style={{ fontSize: hp(1.8), color: 'red', textAlign: 'center' }}>{errors.general}</Text>
+            {/* Mensaje de error general */}
+            {errors?.general && (
+              <Text style={{ fontSize: hp(1.8), color: 'red', textAlign: 'center' }}>
+                {errors.general}
+              </Text>
             )}
+
+            {/* Botón de inicio de sesión con Google 
+             <AntDesign name="google" size={24} color="black" />*/}
+            <TouchableOpacity style={{ marginTop: hp(3) }} className="flex-row justify-center items-center bg-white border border-gray-300 rounded-xl py-3">
+              <Image
+              
+                source={{ uri: 'https://www.material-tailwind.com/logos/logo-google.png' }} 
+                style={{ width: hp(3), height: hp(3), marginRight: hp(1) }} 
+              />
+              <Text style={{ fontSize: hp(2.3) }} className="text-gray-700">
+                Iniciar sesión con Google
+              </Text>
+            </TouchableOpacity>
 
             {/* Texto de registro */}
-            <View className="flex-row justify-center gap-x-2">
+            <View className="flex-row justify-center gap-x-2" style={{ marginTop: hp(3) }}>
               <Text style={{ fontSize: hp(1.8) }} className="font-semibold text-neutral-500 ">
                 ¿No tienes una cuenta?
               </Text>
@@ -189,9 +164,22 @@ export default function SignIn() {
                 </Text>
               </Pressable>
             </View>
+            
+            {/* Componente de alerta */}
+            <View style={{ paddingTop: hp(3) }}>
+              {alertMessage ? (
+                <Alert
+                  style={{ opacity }} 
+                  message={alertMessage} 
+                  onDismiss={() => setAlertMessage('')}
+                />
+              ) : null}
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </CustomKeyboardView>
   );
-}
+};
+
+export default SignInUI;

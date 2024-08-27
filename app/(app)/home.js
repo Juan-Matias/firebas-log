@@ -16,8 +16,11 @@ export default function Home() {
 
   return (
     <View>
+      <Text className="bg-slate-950">
+        hola
+      </Text>
       <ColorList color="#0891b2"/>
-      <Button title="Sign Out" onPress={handleLogout} /> 
+      <Button  title="Sign Out" onPress={handleLogout} /> 
      
 
     </View>

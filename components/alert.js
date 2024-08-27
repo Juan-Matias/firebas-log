@@ -22,8 +22,8 @@ export default function Alert({ message, onDismiss }) {
 return (
     <Animated.View 
     
-      style={{ opacity,paddingTop: hp(93)}} 
-      className="absolute left-0 right-0 items-center z-50"
+      //style={{ opacity,paddingTop: hp(93)}} 
+      className="left-0 right-0 items-center z-50"
     >
       <View className="bg-red-500  px-10 py-2 rounded-xl flex-row items-center">
         <Ionicons name="beer-outline" size={20} color="white" style={{ marginRight: 8 }} />

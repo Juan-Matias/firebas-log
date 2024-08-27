@@ -1,3 +1,6 @@
+--------------------------------------------------------------------------------------------------
+// [Librerias]
+
 //Instalacion del proyecto EXPO
 https://docs.expo.dev
 comand:npx create-expo-app@latest
@@ -7,15 +10,6 @@ https://www.nativewind.dev/quick-starts/expo
  *npm install nativewind
  *npm install --save-dev tailwindcss@3.3.2
  *npx tailwindcss init
-
-- emulator -avd Pixel_8_API_35
-
-// github
-   1 git init
-   2 git status
-   4 git add .
-   5 git commit -m " "
-   6 git push origin main
 
 // biblioteca de Responsive
 https://www.npmjs.com/package/react-native-responsive-screen
@@ -39,3 +33,21 @@ https://console.firebase.google.com/u/0/project/app-carrete-cervecero/overview?h
 // biblioteca async storage -- sirve para almacenamiento local en aplicaciones React Native
 
 > npm i @react-native-async-storage/async-storage
+
+--------------------------------------------------------------------------------------------------
+[comandos github]
+
+- emulator -avd Pixel_8_API_35
+
+// github
+   1 git init
+   2 git status
+   4 git add .
+   5 git commit -m " "
+   6 git push origin main
+
+
+
+
+--------------------------------------------------------------------------------------------------
+Como crear un App 
