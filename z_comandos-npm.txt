@@ -45,6 +45,7 @@ https://console.firebase.google.com/u/0/project/app-carrete-cervecero/overview?h
    4 git add .
    5 git commit -m " "
    6 git push origin main
+   git remote set-url origin <URL de donde se va a subir> 
 
 
 

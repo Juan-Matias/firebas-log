@@ -7,16 +7,19 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(undefined); // Inicialmente undefined
 
     useEffect(() => {
-        // onAuthStateChanged -- Estado de autenticación
-        const unSub = onAuthStateChanged(auth, (user) => {
-            console.log("got user",user);
+        const unSub = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setIsAuthenticated(true);
-                setUser(user);
-                updateUserData(user.uid);
+                try {
+                    const userData = await updateUserData(user.uid);
+                    setUser({ ...user, ...userData });
+                    setIsAuthenticated(true);
+                } catch (error) {
+                    console.error('Error al cargar los datos del usuario: ', error.message);
+                    setIsAuthenticated(false);
+                }
             } else {
                 setIsAuthenticated(false);
                 setUser(null);
@@ -25,22 +28,27 @@ export const AuthContextProvider = ({ children }) => {
         return unSub;
     }, []);
 
-    const updateUserData = async (userId) =>{
+    const updateUserData = async (userId) => {
         const docRef = doc(db, 'users', userId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            let data = docSnap.data();
-            setUser(prevUser => ({...prevUser, username: data.username, profileUrl: data.profileUrl, userId: data.userId}));
-            //setUser({...user, username: data.username, profileUrl:data.profileUrl, userId:data.userId})
+            const data = docSnap.data();
+            return {
+                username: data.username,
+                profileUrl: data.profileUrl,
+                userId: data.userId
+            };
+        } else {
+            throw new Error('No user data found');
         }
-    }
-
+    };
 
     const login = async (email, password) => {
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
-            setUser(response.user);
+            const userData = await updateUserData(response.user.uid);
+            setUser({ ...response.user, ...userData });
             setIsAuthenticated(true);
             return { success: true };
         } catch (error) {
@@ -64,11 +72,8 @@ export const AuthContextProvider = ({ children }) => {
     const register = async (email, password, profileUrl) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
-
-            // Crea una referencia al documento del usuario en Firestore
             const userDocRef = doc(db, "users", response.user.uid);
 
-            // Guarda los datos del usuario en Firestore
             await setDoc(userDocRef, {
                 email: email,
                 profileUrl: profileUrl,
@@ -76,7 +81,8 @@ export const AuthContextProvider = ({ children }) => {
                 createdAt: new Date().toISOString(),
             });
 
-            setUser(response.user);
+            const userData = await updateUserData(response.user.uid);
+            setUser({ ...response.user, ...userData });
             setIsAuthenticated(true);
 
             return { success: true, data: response.user };

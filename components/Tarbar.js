@@ -57,33 +57,6 @@ export default function TabBar({ state, descriptors, navigation }) {
           label={label}
           />
         )
-
-        /*return (
-          <TouchableOpacity
-
-      
-            key={route.key}
-            style={styles.tabbarItem}
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
-            onPress={onPress}
-            onLongPress={onLongPress}
-          >
-          {
-            icons[route.name]({
-              color:isFocused? primatyColor:greyColor
-            })
-          }
-            <Text style={{
-              color: isFocused ? primatyColor: greyColor,
-              fontSize:12
-              }}>
-              {label}
-            </Text>
-          </TouchableOpacity>
-        );*/ 
       })}
     </View>
   );

@@ -98,6 +98,7 @@ const SignInUI = () => {
                   secureTextEntry={!passwordShown}
                   placeholderTextColor="gray"
                 />
+
                 {/* Botón para mostrar/ocultar contraseña */}
                 <TouchableOpacity onPress={togglePasswordVisibility}>
                   <Octicons 
