@@ -1,11 +1,33 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import ColorList from '../../components/ColorList'
+import { View, Text, Button, Pressable } from 'react-native';
+import React from 'react';
+import { useAuth } from '../../context/authContext';
+import ColorList from '../../components/ColorList';
 
-export default function perfil() {
+export default function Home() {
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <View>
+      <Text className="bg-slate-950">
+        hola
+      </Text>
+
+      <View className="flex-auto">
       <ColorList color="#0891b2"/>
+
+      <Button  title="Sign Out" onPress={handleLogout} /> 
+      </View>
+     
+     
+
     </View>
-  )
+  );
 }

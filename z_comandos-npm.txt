@@ -11,6 +11,15 @@ https://www.nativewind.dev/quick-starts/expo
  *npm install --save-dev tailwindcss@3.3.2
  *npx tailwindcss init
 
+
+// biblioteca de carrusel
+
+https://www.npmjs.com/package/react-native-snap-carousel?activeTab=readme
+
+> npm install react-native-snap-carouselnpm
+
+
+
 // biblioteca de Responsive
 https://www.npmjs.com/package/react-native-responsive-screen
 
@@ -34,11 +43,22 @@ https://console.firebase.google.com/u/0/project/app-carrete-cervecero/overview?h
 
 > npm i @react-native-async-storage/async-storage
 
+
+// sanity Api 
+
+https://www.sanity.io/manage/personal/project/g0lfxohl
+
+> npm create sanity@latest -- --project g0lfxohl --dataset production --template clean
+> npm run dev
+
+> npm install @sanity/image-url
+> npm install @sanity/client   
+
 --------------------------------------------------------------------------------------------------
 [comandos github]
 
 - emulator -avd Pixel_8_API_35
-
+Link Guia: https://training.github.com/downloads/es_ES/github-git-cheat-sheet.pdf
 // github
    1 git init
    2 git status
