@@ -49,7 +49,13 @@ https://console.firebase.google.com/u/0/project/app-carrete-cervecero/overview?h
 https://www.sanity.io/manage/personal/project/g0lfxohl
 
 > npm create sanity@latest -- --project g0lfxohl --dataset production --template clean
+
+--Acuerdate estar dentro de la capeta app-carrete-cervecero antes de tirar este comando
 > npm run dev
+
+> npm run deploy
+
+> sanity cors add htpp://localhost:3000
 
 > npm install @sanity/image-url
 > npm install @sanity/client   

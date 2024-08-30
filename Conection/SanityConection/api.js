@@ -27,12 +27,22 @@ export const getCategories = () => {
     `);
 }
 
-export const getEvento = () => {
-    return sanityQuery(`
-        *[_type == 'eventos']{
-            ...
-        }
-    `);
+export const getEvento = async () => {
+    try {
+        const data = await sanityQuery(`
+            *[_type == 'eventos']{
+                _id,
+                name,
+                description,
+                image
+            }
+        `);
+        //console.log("Data fetched from Sanity:", data); // Deberías ver los datos aquí
+        return data;
+    } catch (error) {
+        //console.error("Error fetching eventos:", error);
+        return [];
+    }
 }
 
 export const getFeaturedRestaurantsById = id => {

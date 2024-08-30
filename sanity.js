@@ -1,11 +1,11 @@
-import { createClient } from '@sanity/client';  // Usa createClient en lugar de SanityClient
+import { createClient } from '@sanity/client';
 import imageBuilder from '@sanity/image-url';
 
-const cliente = createClient({  // Usa createClient para crear la instancia del cliente
-    projectId: '85f3kq4l',
-    dataset: 'production',
-    useCdn: true,
-    apiVersion: '2023-05-03',
+const cliente = createClient({
+  projectId: 'g0lfxohl',
+  dataset: 'production',
+  useCdn: true,
+  apiVersion: '2023-08-29',
 });
 
 const builder = imageBuilder(cliente);

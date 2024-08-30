@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    //minHeight: 0, // Añade un tamaño mínimo para probar
+    minHeight: 80, // Añade un tamaño mínimo para probar
   }
 });
