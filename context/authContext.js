@@ -14,7 +14,7 @@ import {
 
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { auth, db } from "../conection/FireBaseConection/firebaseConfig.js";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; // updateDoc para actualizar Firestore
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; 
 // Definir y exportar AuthContext
 export const AuthContext = createContext();
 

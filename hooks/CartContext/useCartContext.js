@@ -1,7 +1,12 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 // Crear el contexto
 export const CartContext = createContext();
+
+// Hook para usar el contexto del carrito
+export const useCartContext = () => {
+  return useContext(CartContext);
+};
 
 // Proveedor del contexto del carrito
 export const CartContextProvider = ({ children }) => {

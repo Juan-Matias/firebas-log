@@ -84,6 +84,7 @@ export default function Home() {
   }, [activeCategory, products]);
 
   return (
+    
     <ScrollView>
       <StatusBar barStyle="dark-content" />
 
@@ -116,6 +117,8 @@ export default function Home() {
             </Text>
             <Carrusel items={carouselItems} />
           </View>
+
+
 
           {/* Cart Promociones */}
           <View style={{ paddingTop: hp(4) }}>

@@ -21,10 +21,30 @@ const CustomCardTitle = ({ title = 'Título predeterminado' }) => (
 
 const CardIProductos = ({ searchQuery }) => {
   const dispatch = useDispatch(); // Inicializa dispatch
+
   const [products, setProducts] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const cartItems = useSelector(state => state.cart.items); // Obtiene los productos en el carrito
+
+
+  // [Logica de Agregar , Quitar , Contador]
+  const handleAgregarProducto = (product) => {
+    dispatch(addToCart(product)); // Usa dispatch para agregar el producto
+    console.log("Producto agregado:", product);
+  };
+
+  const handleQuitarProducto = (productId) => {
+    dispatch(removeFromCart(productId)); // Usa dispatch para quitar el producto
+    console.log("Producto eliminado:", productId);
+  };
+
+  const getCantidadProducto = (productId) => {
+    const item = cartItems.find(item => item._id === productId);
+    return item ? item.quantity : 0;  // Devuelve la cantidad de productos en el carrito
+  };
+  
 
   useEffect(() => {
     const getProducts = async () => {
@@ -42,20 +62,6 @@ const CardIProductos = ({ searchQuery }) => {
     getProducts();
   }, []);
 
-  const handleAgregarProducto = (product) => {
-    dispatch(addToCart(product)); // Usa dispatch para agregar el producto
-    console.log("Producto agregado:", product);
-  };
-
-  const handleQuitarProducto = (productId) => {
-    dispatch(removeFromCart(productId)); // Usa dispatch para quitar el producto
-    console.log("Producto eliminado:", productId);
-  };
-
-  const getCantidadProducto = (productId) => {
-    const item = cartItems.find(item => item._id === productId);
-    return item ? item.quantity : 0;  // Devuelve la cantidad de productos en el carrito
-  };
 
   const filteredProducts = products.filter(product => {
     const query = searchQuery ? searchQuery.toLowerCase() : '';

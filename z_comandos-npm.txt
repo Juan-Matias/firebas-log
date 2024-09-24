@@ -88,7 +88,5 @@ Link Guia: https://training.github.com/downloads/es_ES/github-git-cheat-sheet.pd
    git remote set-url origin <URL de donde se va a subir> 
 
 
-
-
 --------------------------------------------------------------------------------------------------
 Como crear un App 

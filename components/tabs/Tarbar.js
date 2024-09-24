@@ -1,15 +1,18 @@
 import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
-import TabBarButton from './TarBarButton'; // Componente personalizado para los botones de la TabBar
-import { CartContext } from '../../hooks/CartContext/useCartContext'; // Importa el contexto
+import TabBarButton from './TarBarButton'; // Corrigiendo el typo en el nombre del archivo
+import { CartContext } from '../../hooks/CartContext/useCartContext';
 
-// Componente TabBar
 export default function TabBar({ state, descriptors, navigation }) {
-  const { cartItemCount } = useContext(CartContext); // Accede al contexto
+  const { cartItemCount } = useContext(CartContext); // Obtenemos el contador del carrito desde el contexto
 
-  const primaryColor = '#0891b2'; // Color principal para el ítem activo
-  const greyColor = '#737373';    // Color gris para los ítems no activos
-  const colorTabBar = '#ffffff';  // Color de fondo de la barra de navegación
+  const primaryColor = '#0891b2';
+  const greyColor = '#737373';
+  const colorTabBar = '#ffffff';
+
+  // Verificar rutas y valor del contador
+  console.log('Current route:', state.routes[state.index].name);
+  console.log('cartItemCount:', cartItemCount);
 
   return (
     <View
@@ -18,17 +21,13 @@ export default function TabBar({ state, descriptors, navigation }) {
         borderColor: greyColor,
         borderWidth: 0.5,
       }}
-      className="
-        flex-row justify-between 
-        items-center py-4 shadow-black shadow-lg rounded-2xl
-      "
+      className="flex-row justify-between items-center py-4 shadow-black shadow-lg rounded-2xl"
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
+        const label = options.tabBarLabel !== undefined
+          ? options.tabBarLabel
+          : options.title !== undefined
             ? options.title
             : route.name;
 
@@ -67,12 +66,14 @@ export default function TabBar({ state, descriptors, navigation }) {
         );
       })}
 
-      {/* Muestra la cantidad de artículos en el carrito */}
-      <View className="absolute top-0 right-0 mt-2 mr-4">
-        <Text className="bg-red-500 text-white rounded-full px-2">
-          {cartItemCount}
-        </Text>
-      </View>
+      {/* Mostrar contador solo en la pestaña de "Carrito" */}
+      {state.routes[state.index].name === 'Carrito' && cartItemCount > 0 && (
+        <View style={{ position: 'absolute', top: 10, right: 10, zIndex: 1 }}>
+          <Text style={{ backgroundColor: 'red', color: 'white', borderRadius: 12, paddingHorizontal: 8, paddingVertical: 4 }}>
+            {cartItemCount}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

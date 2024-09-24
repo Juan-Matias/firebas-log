@@ -172,6 +172,7 @@ const ProfileScreen = () => {
           >
             ¡Ups! debes registrarte para poder ver tu pefil...
           </Text>
+          
           {/* Botón de cerrar sesión */}
           <TouchableOpacity
             style={{ margin: hp(3) }}
