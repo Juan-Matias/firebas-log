@@ -29,7 +29,7 @@ const CartItems = () => {
   // [Logica de Agregar , Quitar , Contador]
   const handleAgregarProducto = (product) => {
     dispatch(addToCart(product)); // Usa dispatch para agregar el producto
-
+    console.log("Producto Agregado", product);
   };
 
   const handleQuitarProducto = (productId) => {
@@ -40,6 +40,7 @@ const CartItems = () => {
   const getCantidadProducto = (productId) => {
     const item = cartItems.find(item => item._id === productId);
     return item ? item.quantity : 0;  // Devuelve la cantidad de productos en el carrito
+    
   };
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const CartItems = () => {
               )}
 
               {/* Botones de agregar y quitar producto */}
-
+              
                 <Button
                   mode="contained"
                   className="bg-amber-500 rounded-lg"
@@ -101,14 +102,6 @@ const CartItems = () => {
                 >
                   AGREGAR
                 </Button>
-
-              
-
-                  
-
-
-            
-
 
             </View>
           </Card>
