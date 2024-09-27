@@ -58,7 +58,8 @@ const addToCart = (product) => {
   useEffect(() => {
     const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
     setCartItemCount(totalItems);
-    console.log("Total de productos en el carrito:", totalItems); // Debugging
+    {/*console.log("Total de productos en el carrito:", totalItems); */}
+ 
   }, [cart]);
 
   return (

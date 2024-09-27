@@ -7,16 +7,16 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import { fetchProducts } from '../../conection/SanityConection/api.js';
 import { urlFor } from '../../sanity.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, removeFromCart } from '../../slider/cartSlice.js'; // Asegúrate de que la ruta sea correcta
+import { addToCart } from '../../slider/cartSlice.js'; // Asegúrate de que la ruta sea correcta
 
-const imageWidth = wp(42.5);
-const imageHeight = hp(13);
+const imageWidth = wp(44);
+const imageHeight = hp(14);
 
-const cardWidth = wp(46);
-const cardHeight = hp(50);
+const cardWidth = wp(45);
+const cardHeight = hp(36.5);
 
 const CustomCardTitle = ({ title = 'Título predeterminado' }) => (
-  <Text className="font-bold text-base text-black">{title}</Text>
+  <Text className="font-bold text-lg text-black">{title}</Text>
 );
 
 const CardIProductos = ({ searchQuery }) => {
@@ -29,22 +29,17 @@ const CardIProductos = ({ searchQuery }) => {
   const cartItems = useSelector(state => state.cart.items); // Obtiene los productos en el carrito
 
 
-  // [Logica de Agregar , Quitar , Contador]
+  // [Logica de Agregar , Contador]
   const handleAgregarProducto = (product) => {
     dispatch(addToCart(product)); // Usa dispatch para agregar el producto
     console.log("Producto agregado:", product);
-  };
-
-  const handleQuitarProducto = (productId) => {
-    dispatch(removeFromCart(productId)); // Usa dispatch para quitar el producto
-    console.log("Producto eliminado:", productId);
   };
 
   const getCantidadProducto = (productId) => {
     const item = cartItems.find(item => item._id === productId);
     return item ? item.quantity : 0;  // Devuelve la cantidad de productos en el carrito
   };
-  
+
 
   useEffect(() => {
     const getProducts = async () => {
@@ -87,68 +82,66 @@ const CardIProductos = ({ searchQuery }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle="px-5">
+    <ScrollView contentContainerStyle="px-5 ">
       {filteredProducts.length === 0 && searchQuery !== '' && (
-        <Text className="flex-1 text-center text-gray-500 text-lg mt-4">
+        <Text className="flex-1 text-center text-gray-500 text-lg mt-4 ">
           No se encontraron productos que coincidan con "{searchQuery}"
         </Text>
       )}
-      <View className="flex-row flex-wrap justify-between ">
+      <View className="flex-row flex-wrap justify-between bg-gray-100">
         {filteredProducts.map((product, index) => (
-          <View key={product._id ? product._id : index} className="mb-5">
-            <Card className="border-gray-300 p-1.5 border rounded-2xl bg-white"
-            style={{ width: cardWidth, height: cardHeight, marginHorizontal: 8.1 }}>
-            
-            <Card.Cover
-              source={{ uri: urlFor(product.image.asset.url).quality(80).url() }}
-              style={{ width: imageWidth, height: imageHeight }}
-              resizeMode="cover"
-              className="border"
-            />
-            <View className="p-2">
-              <CustomCardTitle title={product.name} />
-              <Text className="mb-2 font-bold text-sm text-gray-500">
-                {product.barrel || 'Descripción predeterminada'} ${product.barrelPrice || 'Precio no disponible'}
-              </Text>
-              <Text className="mb-2 text-base">
-                {product.description || 'Descripción predeterminada'}
-              </Text>
-              <Text className="mb-2 text-base text-red-500">
-                $ {product.price || 'Precio no disponible'}
-              </Text>
 
-              {/* Mostrar cantidad en el carrito */}
-              <Text className="mb-2 text-base text-blue-500">
-                Cantidad en el carrito: {getCantidadProducto(product._id)}
-              </Text>
+          <View key={product._id ? product._id : index} className="mb-5 ">
+            <Card className="  rounded-2xl items-center shadow-none bg-white"
+              style={{ width: cardWidth, height: cardHeight, marginHorizontal: 8.1 }}>
 
+              <View className="items-center">
+                <Card.Cover
+                  source={{ uri: urlFor(product.image.asset.url).quality(80).url() }}
+                  style={{ width: imageWidth, height: imageHeight }}
+                  resizeMode="cover"
+                  className="border-gray-300 border shadow-xl"
+                />
+              </View>
 
+              <View className="pl-2 pt-4">
+                <CustomCardTitle title={product.name} />
+                <Text className="font-bold text-sm text-gray-500">
+                  {product.barrel || 'Descripción predeterminada'} ${product.barrelPrice || 'Precio no disponible'}
+                </Text>
+                <Text className="text-base pt-2">
+                  {product.description || 'Descripción predeterminada'}
+                </Text>
+
+                <View className="flex-row items-center ">
+                  <Text className="text-base text-red-500 font-bold">$ {product.price || 'Precio no disponible'}</Text>
+
+                  {/* Mostrar cantidad en el carrito   */}
+                 
+                  {getCantidadProducto(product._id) > 0 && (
+                    <View className="border border-gray-600 rounded-sm h-8 w-8  items-center  bg-gray-100 "
+                    style={{marginLeft:wp(17)}}>
+                      <Text className="text-base font-semibold ">{getCantidadProducto(product._id)}</Text>
+                    
+                    </View>
+                 
+                  )}
+                </View>
+                
+              </View>
               {/* Btn - Agregar / Quitar */}
-              <View > 
-              
-              <Button
-                onPress={() => handleAgregarProducto(product)} // Agregar producto
-                mode="contained"
-                className="bg-amber-500 rounded-lg "
-                labelStyle={{ color: 'white', fontSize: 16 }}
-              >
-                AGREGAR
-              </Button>
-
-              {/* Botón para quitar producto */}
-              {getCantidadProducto(product._id) > 0 && (
+              <View className="pt-4 items-center">
                 <Button
-                  onPress={() => handleQuitarProducto(product._id)} // Remover producto
+                  onPress={() => handleAgregarProducto(product)} // Agregar producto
                   mode="contained"
-                  className="bg-red-500 mt-2 rounded-lg"
+                  className="bg-amber-500 rounded-lg"
+                  style={{width:wp(35)}}
                   labelStyle={{ color: 'white', fontSize: 16 }}
                 >
-                  QUITAR
+                  AGREGAR
                 </Button>
-              )}
               </View>
-            </View>
-          </Card>
+            </Card>
           </View>
         ))}
       </View>
