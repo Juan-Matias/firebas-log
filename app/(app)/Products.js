@@ -4,7 +4,7 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { StatusBar } from 'expo-status-bar';
 
 // Importaciones de componentes
-import CardIProductos from '../../components/cart/CartProduct.js';
+import CardIProductos from '../../components/cart/CardProduct.js';
 import SearchProducto from '../../components/search/SearchProducto.js';
 
 export default function Productos() {

@@ -82,7 +82,7 @@ const CardIProductos = ({ searchQuery }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle="px-5 ">
+    <ScrollView contentContainerStyle="px-5">
       {filteredProducts.length === 0 && searchQuery !== '' && (
         <Text className="flex-1 text-center text-gray-500 text-lg mt-4 ">
           No se encontraron productos que coincidan con "{searchQuery}"
@@ -109,25 +109,36 @@ const CardIProductos = ({ searchQuery }) => {
                 <Text className="font-bold text-sm text-gray-500">
                   {product.barrel || 'Descripción predeterminada'} ${product.barrelPrice || 'Precio no disponible'}
                 </Text>
-                <Text className="text-base pt-2">
-                  {product.description || 'Descripción predeterminada'}
-                </Text>
 
-                <View className="flex-row items-center ">
-                  <Text className="text-base text-red-500 font-bold">$ {product.price || 'Precio no disponible'}</Text>
+                {/*Escudo / Precio */}
+                <View className="pt-2 w-40">
+                <View className="flex-row items-center justify-between p-0.5 bg-gray-50 ">
 
+                  <View className="flex-col">
+                    <Text className="text-base">
+                      {product.description || 'Descripción predeterminada'}
+                    </Text>
+                    <Text className="text-base text-red-500 font-bold">
+                      $ {product.price ? product.price.toLocaleString('es-ES') : 'Precio no disponible'}
+                    </Text>
+
+                  </View>
                   {/* Mostrar cantidad en el carrito   */}
-                 
+
                   {getCantidadProducto(product._id) > 0 && (
-                    <View className="border border-gray-600 rounded-sm h-8 w-8  items-center  bg-gray-100 "
-                    style={{marginLeft:wp(17)}}>
-                      <Text className="text-base font-semibold ">{getCantidadProducto(product._id)}</Text>
-                    
+                    <View className="border border-gray-600 rounded-sm items-center bg-gray-100 "
+                      style={{
+                        height: hp(3.5),
+                        width: wp(7)
+                      }}
+                    >
+                      <Text className="text-base font-bold text-center">{getCantidadProducto(product._id)}</Text>
+
                     </View>
-                 
+
                   )}
                 </View>
-                
+              </View>
               </View>
               {/* Btn - Agregar / Quitar */}
               <View className="pt-4 items-center">
@@ -135,7 +146,7 @@ const CardIProductos = ({ searchQuery }) => {
                   onPress={() => handleAgregarProducto(product)} // Agregar producto
                   mode="contained"
                   className="bg-amber-500 rounded-lg"
-                  style={{width:wp(35)}}
+                  style={{ width: wp(35) }}
                   labelStyle={{ color: 'white', fontSize: 16 }}
                 >
                   AGREGAR

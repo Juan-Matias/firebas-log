@@ -5,10 +5,10 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 // Importaciones de componentes
 import Carrusel from '../../components/carousel/Carousel.js'; 
-import CartItems from '../../components/cart/CartItems.js';
+import CartItems from '../../components/cart/CardHome.js';
 import Categories from '../../components/categories/Categories.js'; 
 import SearchHome from '../../components/search/SearchHome.js';
-import CardIProductos from '../../components/cart/CartProduct.js'; // Asegúrate de que esta ruta sea correcta
+import CardIProductos from '../../components/cart/CardProduct.js'; // Asegúrate de que esta ruta sea correcta
 
 // Importaciones de Api
 import { urlFor } from '../../sanity.js';
