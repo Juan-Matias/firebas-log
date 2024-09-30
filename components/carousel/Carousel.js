@@ -15,7 +15,7 @@ const Carrusel = ({ items }) => {
   
   // Establece tamaño para el carrusel
   const carouselWidth = wp(100); 
-  const carouselHeight = hp(50); 
+  const carouselHeight = hp(45); 
   return (
     <Carousel
       width={carouselWidth} // Ancho del carrusel
@@ -39,11 +39,11 @@ const Carrusel = ({ items }) => {
             resizeMode="cover"
           />
 
-          <View className="items-center justify-center p-3">
-            <StyledText className="text-2xl font-bold text-black text-center">
+          <View className="justify-center mt-4">
+            <StyledText className="text-3xl font-extrabold text-black text-center tracking-widest uppercase italic">
               {item.title}
             </StyledText>
-            <StyledText className="text-lg font-semibold text-gray-600 text-center mt-2">
+            <StyledText className="text-base font-semibold text-gray-600 text-center tracking-widest uppercase italic">
               {item.text}
             </StyledText>
           </View>

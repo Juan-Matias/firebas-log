@@ -99,7 +99,7 @@ export default function Home() {
           className="bg-white border-2 border-yellow-500 rounded-2xl px-6 py-3"
           onPress={handleSignIn}
         >
-          <Text className="text-black text-lg">Iniciar Sesión</Text>
+          <Text className="font-medium text-lg">Iniciar Sesión</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className="bg-yellow-500 rounded-2xl px-6 py-3"

@@ -9,31 +9,24 @@ export default function Layout() {
 
   return (
     <Tabs
-      tabBar={props => <TabBar {...props} />}
-      screenOptions={{
-        headerStyle: {
-          height: 120,
-          //backgroundColor: "#FFDF8A", 
-          //borderRadius: 20,
-        },
-        headerTitleStyle: {
-          fontSize: 30,
-         
-        },
-        headerTitleAlign: 'left',
-        tabBarHideOnKeyboard: true,
-        headerShown: true,
-        headerRight: () => (
-          <Ionicons 
-            name="person-circle-outline" 
-            size={40} 
-            color="black" 
-            style={{ marginRight: 20}} 
-            onPress={() => router.push("Profile")} // Lleva a la pantalla de perfil
-          />
-        ),
-      }}
-    >
+    tabBar={props => <TabBar {...props} />} // TabBar personalizado
+    screenOptions={{
+      tabBarHideOnKeyboard: true,  // Oculta el TabBar cuando el teclado aparece
+      headerStyle: { height: 120 },
+      headerTitleStyle: { fontSize: 30 },
+      headerTitleAlign: 'left',
+      headerShown: true,
+      headerRight: () => (
+        <Ionicons 
+          name="person-circle-outline" 
+          size={40} 
+          color="black" 
+          style={{ marginRight: 20 }} 
+          onPress={() => router.push("Profile")}
+        />
+      ),
+    }}
+  >
       <Tabs.Screen name='Home' options={{ title: "Home" }} />
       <Tabs.Screen name='Products' options={{ title: "Productos" }} />
       <Tabs.Screen name='Orders' options={{ title: "Pedidos" }} />

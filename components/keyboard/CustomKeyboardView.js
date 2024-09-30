@@ -13,6 +13,8 @@ export default function CustomKeyboardView({ children }) {
         style={{ flex: 1 }}
         bounces={false}
         showsVerticalScrollIndicator={false}
+        keyboardDismissMode="on-drag"  // Dismiss al arrastrar
+        keyboardShouldPersistTaps="handled" // Manejo de toques mientras el teclado está visible
       >
         {children}
       </ScrollView>

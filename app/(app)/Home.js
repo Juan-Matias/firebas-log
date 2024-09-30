@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView } from 'react-native';
+import { Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 // Importaciones de componentes
-import Carrusel from '../../components/carousel/Carousel.js'; 
+import Carrusel from '../../components/carousel/Carousel.js';
 import CartItems from '../../components/cart/CardHome.js';
-import Categories from '../../components/categories/Categories.js'; 
+import Categories from '../../components/categories/Categories.js';
 import SearchHome from '../../components/search/SearchHome.js';
 import CardIProductos from '../../components/cart/CardProduct.js'; // Asegúrate de que esta ruta sea correcta
 
 // Importaciones de Api
 import { urlFor } from '../../sanity.js';
 import { getCategories, getEvento, fetchProducts } from '../../conection/SanityConection/api.js';
+import CustomKeyboardView from '../../components/keyboard/CustomKeyboardView.js';
 
 export default function Home() {
   const [carouselItems, setCarouselItems] = useState([]);
@@ -20,7 +21,13 @@ export default function Home() {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState(''); // Estado para la búsqueda
   const [products, setProducts] = useState([]); // Estado para todos los productos
-  const [filteredProductsByCategory, setFilteredProductsByCategory] = useState([]); // Estado para los productos filtrados por categoría
+  const [filteredProductsByCategory, setFilteredProductsByCategory] = useState([]); // Productos filtrados por categoría
+  const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del popup
+
+  // Mostrar el popup al cargar la pantalla
+  useEffect(() => {
+    setModalVisible(false);
+  }, []);
 
   // Obtener eventos para el carrusel
   useEffect(() => {
@@ -73,7 +80,6 @@ export default function Home() {
   useEffect(() => {
     if (activeCategory) {
       const filtered = products.filter(product => {
-        // Asegúrate de que product.category y product.category._ref existan
         const categoryRef = product?.category?._ref || '';
         return categoryRef === activeCategory;
       });
@@ -84,25 +90,28 @@ export default function Home() {
   }, [activeCategory, products]);
 
   return (
-    
-    <ScrollView>
+    <CustomKeyboardView>
       <StatusBar barStyle="dark-content" />
 
       {/* Buscador */}
       <View>
-        <SearchHome searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <SearchHome 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+          modalVisible={modalVisible} 
+          setModalVisible={setModalVisible} 
+        />
       </View>
 
-      {/* Condicional para mostrar CardIProductos o el resto */}
+      {/* Mostrar productos si hay búsqueda o categorías activas */}
       {searchQuery ? (
         <CardIProductos searchQuery={searchQuery} />
       ) : activeCategory ? (
-        <CardIProductos products={filteredProductsByCategory} /> // Pasar los productos filtrados por categoría
+        <CardIProductos products={filteredProductsByCategory} />
       ) : (
         <>
-
-          {/* Categorías */}
-          <View style={{ paddingTop: hp(2) }}>
+          {/* Mostrar categorías */}
+          <View style={{ paddingTop: hp(4) }}>
             <Categories
               categories={categories}
               activeCategory={activeCategory}
@@ -110,7 +119,7 @@ export default function Home() {
             />
           </View>
 
-          {/* Carrusel */}
+          {/* Carrusel de eventos */}
           <View className="px-4">
             <Text style={{ paddingTop: hp(4) }} className="text-2xl font-bold text-zinc-700">
               Eventos de Cerveza
@@ -118,9 +127,7 @@ export default function Home() {
             <Carrusel items={carouselItems} />
           </View>
 
-
-
-          {/* Cart Promociones */}
+          {/* Sección de promociones */}
           <View style={{ paddingTop: hp(4) }}>
             <Text className="text-2xl font-bold text-zinc-700 px-4">Promociones</Text>
             <View style={{ paddingTop: hp(2) }}>
@@ -128,7 +135,7 @@ export default function Home() {
             </View>
           </View>
 
-          {/* Cart Populares */}
+          {/* Sección de productos populares */}
           <View style={{ paddingTop: hp(4) }}>
             <Text className="text-2xl font-bold text-zinc-700 px-4">Populares</Text>
             <View style={{ paddingTop: hp(2) }}>
@@ -137,6 +144,6 @@ export default function Home() {
           </View>
         </>
       )}
-    </ScrollView>
+    </CustomKeyboardView>
   );
 }

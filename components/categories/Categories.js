@@ -50,14 +50,14 @@ const Categories = ({ categories, activeCategory, setActiveCategory }) => {
           const textClass = isActive ? 'font-semibold text-gray-900' : 'text-zinc-700';
 
           return (
-            <View key={index} className="items-center mr-5">
+            <View key={index} className="items-center mr-5 ">
               <TouchableOpacity
                 onPress={() => setActiveCategory(category._id)}
                 activeOpacity={0.7}
               >
                 {/* Botón animado */}
                 <Animated.View
-                  className={`p-2 rounded-2xl shadow`}
+                  className={`p-2 rounded-2xl shadow `}
                   style={animatedButtonStyle}
                 >
                   {/* Imagen animada */}
@@ -67,7 +67,6 @@ const Categories = ({ categories, activeCategory, setActiveCategory }) => {
                         width: imageWidth,
                         height: imageHeight,
                         borderRadius: 10,
-
                         resizeMode: 'cover',
                       },
                       animatedImageStyle, // Aplicar animación
@@ -76,7 +75,7 @@ const Categories = ({ categories, activeCategory, setActiveCategory }) => {
                   />
                 </Animated.View>
               </TouchableOpacity>
-              <Text className={`text-sm mt-2 ${textClass}`}>
+              <Text className={`text-sm mt-2  ${textClass}`}>
                 {category.name}
               </Text>
             </View>

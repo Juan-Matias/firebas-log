@@ -1,24 +1,46 @@
-import React from "react";
-import { View, Text } from "react-native";
-import TabBarButton from "./TarBarButton"; // Asegúrate de que la ruta sea correcta
-import { useSelector } from "react-redux"; // Usar Redux para obtener los productos del carrito
+import React, { useState, useEffect } from "react";
+import { View, Text, Keyboard } from "react-native";
+import TabBarButton from "./TarBarButton"; 
+import { useSelector } from "react-redux";
 
 export default function TabBar({ state, descriptors, navigation }) {
-  // Obtiene los productos en el carrito desde Redux
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // Listener para detectar cuando el teclado aparece y desaparece
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  // Productos del carrito desde Redux
   const cartItems = useSelector((state) => state.cart.items);
 
-  // Colores del TabBar
   const primaryColor = "#0891b2";
   const greyColor = "#737373";
   const colorTabBar = "#ffffff";
 
-  // Función para obtener el total de productos en el carrito
+  // Obtener el total de productos en el carrito
   const getTotalProductos = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
-  // Obtiene el total de productos en el carrito
   const totalProductos = getTotalProductos();
+
+  // Ocultar el TabBar si el teclado está visible
+  if (isKeyboardVisible) {
+    return null;
+  }
 
   return (
     <View

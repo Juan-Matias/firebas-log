@@ -10,10 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../slider/cartSlice.js'; // Asegúrate de que la ruta sea correcta
 
 const imageWidth = wp(44);
-const imageHeight = hp(14);
+const imageHeight = hp(13);
 
-const cardWidth = wp(45);
-const cardHeight = hp(36.5);
+const cardWidth = wp(46);
+const cardHeight = hp(35);
 
 const CustomCardTitle = ({ title = 'Título predeterminado' }) => (
   <Text className="font-bold text-lg text-black">{title}</Text>
@@ -88,21 +88,20 @@ const CardIProductos = ({ searchQuery }) => {
           No se encontraron productos que coincidan con "{searchQuery}"
         </Text>
       )}
-      <View className="flex-row flex-wrap justify-between bg-gray-100">
+      
+      
+      <View className="flex-row flex-wrap justify-between bg-gray-100 pt-5">
         {filteredProducts.map((product, index) => (
-
           <View key={product._id ? product._id : index} className="mb-5 ">
             <Card className="  rounded-2xl items-center shadow-none bg-white"
               style={{ width: cardWidth, height: cardHeight, marginHorizontal: 8.1 }}>
-
-              <View className="items-center">
                 <Card.Cover
                   source={{ uri: urlFor(product.image.asset.url).quality(80).url() }}
                   style={{ width: imageWidth, height: imageHeight }}
                   resizeMode="cover"
                   className="border-gray-300 border shadow-xl"
                 />
-              </View>
+          
 
               <View className="pl-2 pt-4">
                 <CustomCardTitle title={product.name} />
