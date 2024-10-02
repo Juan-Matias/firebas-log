@@ -26,7 +26,7 @@ export default function Home() {
 
   // Mostrar el popup al cargar la pantalla
   useEffect(() => {
-    setModalVisible(false);
+    setModalVisible(true); // cambiar
   }, []);
 
   // Obtener eventos para el carrusel

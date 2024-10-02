@@ -69,6 +69,11 @@ npm install @reduxjs/toolkit react-redux
 // para actualizar el servidor
 npx sanity deploy
 
+// Libreria para el horario y la fecha
+>npm install react-native-modal-datetime-picker
+
+
+
 --------------------------------------------------------------------------------------------------
 [comandos github]
 
