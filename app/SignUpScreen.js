@@ -61,59 +61,95 @@ export default function SignUp() {
 
           {/* Sección de inputs */}
           <View className="gap-y-4">
-            {/* Mapeo de los campos de input */}
-            {Object.keys(refs).map((key, index) => (
-              <View key={index}>
-                <View
-                  style={{ height: hp(7) }}
-                  className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl"
-                >
-                  {/* Ícono para cada input dependiendo del campo */}
-                  <Feather
-                    name={
-                      key === "username" ? "user" :
-                      key === "telefono" ? "phone" :
-                      key === "email" ? "mail" : "lock"
-                    }
-                    size={hp(2.7)}
-                  />
-                  
-                  {/* Input correspondiente */}
-                  <TextInput
-                    ref={refs[key]} // Referencia del input
-                    onChangeText={value => {
-                      refs[key].current.value = value; // Almacenar el valor ingresado
-                      if (errors[key]) setErrors(prev => ({ ...prev, [key]: "" })); // Limpiar errores
-                     
-                    }}
-                    style={{ fontSize: hp(2) }}
-                    className="flex-1 font-semibold text-neutral-800"
-                    
-                    placeholder={
-                      key === "username" ? "Nombre Completo" :
-                      key === "telefono" ? "Teléfono" :
-                      key === "email" ? "Correo" :
-                      
-                      key === "password" ? "Contraseña" : "Confirmar Contraseña"
-                    }
-                    keyboardType="email-address"
-                    placeholderTextColor="gray"
-                    secureTextEntry={key.includes("password") && !passwordShown[key]} // Alternar visibilidad de contraseñas
-                  />
-                  
-                  {/* Botón para mostrar/ocultar la contraseña */}
-                  {key.includes("password") && (
-                    <TouchableOpacity onPress={() => togglePasswordVisibility(key)}>
-                      <Octicons
-                        name={passwordShown[key] ? "eye" : "eye-closed"} // Cambia el ícono
-                        size={hp(2.7)}
-                        color="gray"
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-            ))}
+            {/* Input para el nombre de usuario */}
+            <View style={{ height: hp(7) }} className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
+              <Feather name="user" size={hp(2.7)} />
+              <TextInput
+                ref={refs.username}
+                onChangeText={(value) => {
+                  refs.username.current.value = value;
+                  if (errors.username) setErrors((prev) => ({ ...prev, username: '' }));
+                }}
+                style={{ fontSize: hp(2) }}
+                className="flex-1 font-semibold text-neutral-800"
+                placeholder="Nombre Completo"
+                placeholderTextColor="gray"
+              />
+            </View>
+
+            {/* Input para el teléfono */}
+            <View style={{ height: hp(7) }} className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
+              <Feather name="phone" size={hp(2.7)} />
+              <TextInput
+                ref={refs.telefono}
+                onChangeText={(value) => {
+                  refs.telefono.current.value = value;
+                  if (errors.telefono) setErrors((prev) => ({ ...prev, telefono: '' }));
+                }}
+                style={{ fontSize: hp(2) }}
+                className="flex-1 font-semibold text-neutral-800"
+                placeholder="Teléfono"
+                keyboardType="phone-pad"
+                placeholderTextColor="gray"
+              />
+            </View>
+
+            {/* Input para el correo */}
+            <View style={{ height: hp(7) }} className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
+              <Feather name="mail" size={hp(2.7)} />
+              <TextInput
+                ref={refs.email}
+                onChangeText={(value) => {
+                  refs.email.current.value = value;
+                  if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
+                }}
+                style={{ fontSize: hp(2) }}
+                className="flex-1 font-semibold text-neutral-800"
+                placeholder="Correo"
+                keyboardType="email-address"
+                placeholderTextColor="gray"
+              />
+            </View>
+
+            {/* Input para la contraseña */}
+            <View style={{ height: hp(7) }} className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
+              <Feather name="lock" size={hp(2.7)} />
+              <TextInput
+                ref={refs.password}
+                onChangeText={(value) => {
+                  refs.password.current.value = value;
+                  if (errors.password) setErrors((prev) => ({ ...prev, password: '' }));
+                }}
+                style={{ fontSize: hp(2) }}
+                className="flex-1 font-semibold text-neutral-800"
+                placeholder="Contraseña"
+                secureTextEntry={!passwordShown.password}
+                placeholderTextColor="gray"
+              />
+              <TouchableOpacity onPress={() => togglePasswordVisibility('password')}>
+                <Octicons name={passwordShown.password ? 'eye' : 'eye-closed'} size={hp(2.7)} color="gray" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Input para confirmar la contraseña */}
+            <View style={{ height: hp(7) }} className="flex-row gap-x-2 px-3 bg-neutral-100 items-center rounded-2xl">
+              <Feather name="lock" size={hp(2.7)} />
+              <TextInput
+                ref={refs.confirmPassword}
+                onChangeText={(value) => {
+                  refs.confirmPassword.current.value = value;
+                  if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: '' }));
+                }}
+                style={{ fontSize: hp(2) }}
+                className="flex-1 font-semibold text-neutral-800"
+                placeholder="Confirmar Contraseña"
+                secureTextEntry={!passwordShown.confirmPassword}
+                placeholderTextColor="gray"
+              />
+              <TouchableOpacity onPress={() => togglePasswordVisibility('confirmPassword')}>
+                <Octicons name={passwordShown.confirmPassword ? 'eye' : 'eye-closed'} size={hp(2.7)} color="gray" />
+              </TouchableOpacity>
+            </View>
 
             {/* Botón de registro o indicador de carga */}
             <View style={{ paddingTop: hp(1) }}>
