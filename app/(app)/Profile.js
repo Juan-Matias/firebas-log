@@ -12,6 +12,10 @@ import { useNavigation } from "@react-navigation/native";
 const ProfileScreen = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
+
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [profileUrl, setProfileUrl] = useState(
@@ -26,6 +30,7 @@ const ProfileScreen = () => {
     updateUserPassword,
     refreshUserData,
     reauthenticateUser,
+    updateUserPhone,
   } = useAuth(); // Obtenemos el usuario del contexto
 
   // Efecto para establecer el nombre y email del usuario autenticado
@@ -33,6 +38,8 @@ const ProfileScreen = () => {
     if (user) {
       setUsername(user.username || "Prueba"); // Nombre del usuario o "Usuario Invitado"
       setEmail(user.email || "Prueba@example.com"); // Email del usuario o uno por defecto
+      setTelefono(user.telefono || "Agregar Telefono");
+
     }
   }, [user]);
 
@@ -82,6 +89,20 @@ const ProfileScreen = () => {
     }
   };
 
+
+    const result = await updateUserPhone(telefono);
+    if (result.success) {
+      await refreshUserData();
+      setShowAlert(true);
+      setAlertMessage("Teléfono actualizado con éxito.");
+    } else {
+      setAlertMessage(result.message || "Error al actualizar el teléfono.");
+      setShowAlert(true);
+    }
+  };
+
+
+
   // Función para cerrar sesión
   const handleLogout = async () => {
     try {
@@ -100,6 +121,8 @@ const ProfileScreen = () => {
         <>
           <View className="flex-row justify-start items-center mb-4 bg-gray-100 rounded-lg shadow-md p-4">
             <View style={{ position: 'relative' }}>
+
+
               {/* Sección de Avatar */}
               <Avatar.Image
                 size={70}
@@ -126,6 +149,8 @@ const ProfileScreen = () => {
                 />
               </TouchableOpacity>
             </View>
+
+
 
             {/* Sección de nombre y email del usuario */}
             <View className="pl-2 w-52">
@@ -154,10 +179,34 @@ const ProfileScreen = () => {
                 </TouchableOpacity>
               </View>
 
+
               <Text className="text-base font-semibold text-zinc-600">
                 {email}
               </Text>
+
+              {/* Seccion - Agregar Telefono*/}
+              <View className="pt-2 flex-row justify-between  w-52">
+                <TextInput
+                  className="  rounded-lg text-left"
+                  placeholder="Actualizar número de teléfono"
+                  value={telefono}
+                  onChangeText={setTelefono}
+                  keyboardType="numeric"
+                // Muestra el botón cuando el campo está en foco
+                //onBlur={() => setIsEditingPhone(false)} // Oculta el botón cuando el campo pierde el foco
+                />
+
+                <TouchableOpacity onPress={() => setIsEditingPhone(!isEditingPhone)}>
+                  <MaterialCommunityIcons
+                    name={isEditingPhone ? "check" : "pencil-outline"}
+                    size={hp(2.7)}
+                    color="gray"
+                  />
+                </TouchableOpacity>
+
+              </View>
             </View>
+
           </View>
 
           {/* Mostrar botón de guardar solo si se está editando el nombre */}
@@ -174,8 +223,8 @@ const ProfileScreen = () => {
 
           {/* Seccion Btn cambiar contraseña */}
           <TouchableOpacity className="flex-row items-center bg-gray-100 px-4 py-4 w-80 rounded-lg shadow-md mb-4">
-              <Ionicons name="lock-closed-outline" size={24} color="black" />
-              <Text className="ml-4 text-base font-semibold">Cambiar contraseña</Text>
+            <Ionicons name="lock-closed-outline" size={24} color="black" />
+            <Text className="ml-4 text-base font-semibold">Cambiar contraseña</Text>
           </TouchableOpacity>
 
           {/* Campos para actualizar contraseña */}

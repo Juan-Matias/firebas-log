@@ -205,7 +205,7 @@ const SignInUI = () => {
               </View>
   
               {/* Componente de alerta */}
-              <View style={{ paddingTop: hp(3) }}>
+              <View style={{ paddingTop: hp(1) }}>
                 {alertMessage ? (
                   <Alert
                     style={{ opacity }}
