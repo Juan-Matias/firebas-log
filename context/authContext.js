@@ -172,11 +172,11 @@ export const AuthContextProvider = ({ children }) => {
 
   const register = async (email, password, profileUrl, username) => {
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      if (!username || !email || !password) {
+        throw new Error("Todos los campos son obligatorios");
+      }
+      
+      const response = await createUserWithEmailAndPassword(auth, email, password);
       const userDocRef = doc(db, "users", response.user.uid);
       await setDoc(userDocRef, {
         email: email,
@@ -185,11 +185,12 @@ export const AuthContextProvider = ({ children }) => {
         username: username,
         createdAt: new Date().toISOString(),
       });
-
+      
+      // Verifica que el documento se haya creado correctamente
       const userData = await updateUserData(response.user.uid);
       setUser({ ...response.user, ...userData });
       setIsAuthenticated(true);
-
+      
       return { success: true, data: response.user };
     } catch (error) {
       console.error("Error en el registro: ", error.message);
@@ -197,6 +198,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  
   const resetPassword = async (email) => {
     try {
       await sendPasswordResetEmail(auth, email);

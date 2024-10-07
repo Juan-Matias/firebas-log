@@ -26,9 +26,6 @@ export default function SignUp() {
   } = useSignUpLogic();
 
   const router = useRouter(); // Router para la navegación
-  const opacity = new Animated.Value(1); // Estado para la animación de la alerta
-
-  // Estado para la visibilidad de las contraseñas
   const [passwordShown, setPasswordShown] = useState({
     password: false,
     confirmPassword: false,
@@ -193,7 +190,6 @@ export default function SignUp() {
             <View style={{ paddingTop: hp(3) }}>
               {alertMessage ? (
                 <Alert
-                  style={{ opacity }} // Animación de la alerta
                   message={alertMessage} // Mensaje de la alerta
                   onDismiss={() => setAlertMessage('')} // Función para cerrar la alerta
                 />

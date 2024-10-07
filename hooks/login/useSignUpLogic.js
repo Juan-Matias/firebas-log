@@ -9,11 +9,11 @@ const useSignUpLogic = () => {
 
   // Refs para manejar los valores y el enfoque de los campos de entrada
   const refs = {
-    username: useRef(null),
-    email: useRef(null),
-    telefono: useRef(null),
-    password: useRef(null),
-    passConfirmacion: useRef(null),
+    username: useRef(''), // Cambiado a un string en lugar de null
+    email: useRef(''),
+    telefono: useRef(''),
+    password: useRef(''),
+    confirmPassword: useRef(''), // Cambiar este nombre
   };
 
   const router = useRouter();
@@ -21,11 +21,11 @@ const useSignUpLogic = () => {
 
   // Validaciones de los inputs
   const validations = {
-    email: value => /\S+@\S+\.\S+/.test(value) ? "" : "Please enter a valid email address",
-    username: value => value ? "" : "Ingrese su nombre completo",
-    telefono: value => /^\d+$/.test(value) ? "" : "Please enter a valid phone number",
-    password: value => value ? "" : "Please enter your password",
-    passConfirmacion: value => value === refs.password.current?.value ? "" : "Passwords do not match",
+    email: (value) => /\S+@\S+\.\S+/.test(value) ? "" : "Por favor, introduce un correo electrónico válido",
+    username: (value) => value ? "" : "Ingrese su nombre completo",
+    telefono: (value) => /^\d+$/.test(value) ? "" : "Por favor, introduce un número de teléfono válido",
+    password: (value) => value ? "" : "Por favor, introduce tu contraseña",
+    confirmPassword: (value) => value === refs.password.current ? "" : "Las contraseñas no coinciden",
   };
 
   // Manejo del registro
@@ -35,7 +35,7 @@ const useSignUpLogic = () => {
 
     // Validar los campos y capturar el primer error
     for (const key in refs) {
-      const value = refs[key].current?.value;
+      const value = refs[key].current; // Asegúrate de que se obtiene el valor correctamente
       const errorMessage = validations[key](value);
       if (errorMessage) {
         validationErrors[key] = errorMessage;
@@ -62,13 +62,13 @@ const useSignUpLogic = () => {
         throw new Error("register function is not defined in useAuth");
       }
 
-      const response = await register(refs.email.current.value, refs.password.current.value, 'defaultProfileUrl');
+      const response = await register(refs.email.current, refs.password.current, 'defaultProfileUrl');
 
       if (response.success) {
         router.push('/SignInScreen');
       } else {
-        setAlertMessage(response.message || "An error occurred during registration.");
-        setErrors({ general: response.message || "An error occurred during registration." });
+        setAlertMessage(response.message || "Ocurrió un error durante el registro.");
+        setErrors({ general: response.message || "Ocurrió un error durante el registro." });
       }
     } catch (error) {
       setAlertMessage(`Error: ${error.message}`);

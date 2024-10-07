@@ -90,6 +90,7 @@ const ProfileScreen = () => {
   };
 
 
+  const handlePhoneChange = async () => {
     const result = await updateUserPhone(telefono);
     if (result.success) {
       await refreshUserData();
@@ -100,7 +101,6 @@ const ProfileScreen = () => {
       setShowAlert(true);
     }
   };
-
 
 
   // Función para cerrar sesión

@@ -53,41 +53,34 @@ export const fetchProducts = async () => {
 };
 
 
-/*
-export const getFeaturedRestaurants = () => {
-    return sanityQuery(`
-        *[_type == 'featured']{
-            ...,
-            restaurants[]->{
-                ...,
-                dishes[]->{
-                    ...
-                },
-                type->{
-                    name
-                }
+
+export const getComunas = async () => {
+    try {
+        const data = await sanityQuery(`
+            *[_type == 'comuna']{
+                _id,
+                name
             }
-        }
-    `);
-}
-*/
+        `);
+        return data;
+    } catch (error) {
+        console.error("Error fetching comunas:", error);
+        return [];
+    }
+};
 
-
-
-/*
-export const getFeaturedRestaurantsById = id => {
-    return sanityQuery(`
-        *[_type == 'featured' && _id == $id]{
-            ...,
-            restaurants[]->{
-                ...,
-                dishes[]->{
-                    ...
-                },
-                type->{
-                    name
-                }
+export const getBarrilesAdicionales = async () => {
+    try {
+        const data = await sanityQuery(`
+            *[_type == 'barrilAdicional']{
+                _id,
+                name,
+                price
             }
-        }[0]
-    `, { id });
-}*/
+        `);
+        return data;
+    } catch (error) {
+        console.error("Error fetching barriles adicionales:", error);
+        return [];
+    }
+};
