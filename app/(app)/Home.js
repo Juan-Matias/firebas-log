@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import React, { useEffect, useState } from "react";
+import { Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 // Importaciones de componentes
-import Carrusel from '../../components/carousel/Carousel.js';
-import CartItems from '../../components/cart/CardHome.js';
-import Categories from '../../components/categories/Categories.js';
-import SearchHome from '../../components/search/SearchHome.js';
-import CardIProductos from '../../components/cart/CardProduct.js'; // Asegúrate de que esta ruta sea correcta
+import Carrusel from "../../components/carousel/Carousel.js";
+import CartItems from "../../components/cart/CardHome.js";
+import Categories from "../../components/categories/Categories.js";
+import SearchHome from "../../components/search/SearchHome.js";
+import CardIProductos from "../../components/cart/CardProduct.js"; // Asegúrate de que esta ruta sea correcta
 
 // Importaciones de Api
-import { urlFor } from '../../sanity.js';
-import { getCategories, getEvento, fetchProducts } from '../../conection/SanityConection/api.js';
-import CustomKeyboardView from '../../components/keyboard/CustomKeyboardView.js';
+import { urlFor } from "../../sanity.js";
+import {
+  getCategories,
+  getEvento,
+  fetchProducts,
+} from "../../conection/SanityConection/api.js";
+import CustomKeyboardView from "../../components/keyboard/CustomKeyboardView.js";
+import { fetchProductsByCategory } from "../../conection/SanityConection/api.js";
 
 export default function Home() {
   const [carouselItems, setCarouselItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); // Estado para la búsqueda
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
   const [products, setProducts] = useState([]); // Estado para todos los productos
-  const [filteredProductsByCategory, setFilteredProductsByCategory] = useState([]); // Productos filtrados por categoría
+  const [filteredProductsByCategory, setFilteredProductsByCategory] = useState(
+    []
+  ); // Productos filtrados por categoría
   const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del popup
 
   // Mostrar el popup al cargar la pantalla
@@ -34,7 +41,7 @@ export default function Home() {
     const fetchEventos = async () => {
       try {
         const data = await getEvento();
-        const formattedData = data.map(evento => {
+        const formattedData = data.map((evento) => {
           const imageUrl = urlFor(evento.image.asset._ref).url();
           return {
             title: evento.name,
@@ -44,7 +51,7 @@ export default function Home() {
         });
         setCarouselItems(formattedData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchEventos();
@@ -57,11 +64,27 @@ export default function Home() {
         const data = await getCategories();
         setCategories(data);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error("Error fetching categories:", error);
       }
     };
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (activeCategory) {
+      const fetchProductsBySelectedCategory = async () => {
+        try {
+          const products = await fetchProductsByCategory(activeCategory); // Filtrando por nombre de categoría
+          setFilteredProductsByCategory(products);
+        } catch (error) {
+          console.error("Error fetching products by category:", error);
+        }
+      };
+      fetchProductsBySelectedCategory();
+    } else {
+      setFilteredProductsByCategory([]); // Restablecer si no hay categoría activa
+    }
+  }, [activeCategory]);
 
   // Obtener todos los productos al cargar el componente
   useEffect(() => {
@@ -70,24 +93,13 @@ export default function Home() {
         const data = await fetchProducts();
         setProducts(data);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
     fetchAllProducts();
   }, []);
 
-  // Filtrar productos por categoría cuando se seleccione una categoría
-  useEffect(() => {
-    if (activeCategory) {
-      const filtered = products.filter(product => {
-        const categoryRef = product?.category?._ref || '';
-        return categoryRef === activeCategory;
-      });
-      setFilteredProductsByCategory(filtered);
-    } else {
-      setFilteredProductsByCategory([]); // Restablecer si no hay categoría activa
-    }
-  }, [activeCategory, products]);
+  // Filtrar productos por categoría cuando se seleccione una categoríaS
 
   return (
     <CustomKeyboardView>
@@ -95,11 +107,11 @@ export default function Home() {
 
       {/* Buscador */}
       <View>
-        <SearchHome 
-          searchQuery={searchQuery} 
-          setSearchQuery={setSearchQuery} 
-          modalVisible={modalVisible} 
-          setModalVisible={setModalVisible} 
+        <SearchHome
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
         />
       </View>
 
@@ -107,7 +119,7 @@ export default function Home() {
       {searchQuery ? (
         <CardIProductos searchQuery={searchQuery} />
       ) : activeCategory ? (
-        <CardIProductos products={filteredProductsByCategory} />
+        <CardIProductos products={filteredProductsByCategory} /> // Aquí mostramos solo los productos filtrados
       ) : (
         <>
           {/* Mostrar categorías */}
@@ -121,7 +133,10 @@ export default function Home() {
 
           {/* Carrusel de eventos */}
           <View className="px-4">
-            <Text style={{ paddingTop: hp(4) }} className="text-2xl font-bold text-zinc-700">
+            <Text
+              style={{ paddingTop: hp(4) }}
+              className="text-2xl font-bold text-zinc-700"
+            >
               Eventos de Cerveza
             </Text>
             <Carrusel items={carouselItems} />
@@ -129,7 +144,9 @@ export default function Home() {
 
           {/* Sección de promociones */}
           <View style={{ paddingTop: hp(4) }}>
-            <Text className="text-2xl font-bold text-zinc-700 px-4">Promociones</Text>
+            <Text className="text-2xl font-bold text-zinc-700 px-4">
+              Promociones
+            </Text>
             <View style={{ paddingTop: hp(2) }}>
               <CartItems />
             </View>
@@ -137,7 +154,9 @@ export default function Home() {
 
           {/* Sección de productos populares */}
           <View style={{ paddingTop: hp(4) }}>
-            <Text className="text-2xl font-bold text-zinc-700 px-4">Populares</Text>
+            <Text className="text-2xl font-bold text-zinc-700 px-4">
+              Populares
+            </Text>
             <View style={{ paddingTop: hp(2) }}>
               <CartItems />
             </View>
